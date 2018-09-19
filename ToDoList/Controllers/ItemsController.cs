@@ -41,6 +41,20 @@ namespace ToDoList.Controllers
 
             return View(newItem);
         }
+        [HttpGet("/items/{id}/update")]
+        public ActionResult UpdateForm(int id)
+        {
+            Item thisItem = Item.Find(id);
+            return View(thisItem);
+        }
+        [HttpPost("/items/{id}/update")]
+        public ActionResult Update(int id, string newDescription)
+        {
+            Item thisItem = Item.Find(id);
+            thisItem.Edit(newDescription);
+            return RedirectToAction("Index");
+        }
+
 
     }
 }

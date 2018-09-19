@@ -165,7 +165,32 @@ namespace ToDoList.Models
          }
 
         return foundItem;  // This line is new!
-
       }
+      public void Edit(string newDescription)
+       {
+           MySqlConnection conn = DB.Connection();
+           conn.Open();
+           var cmd = conn.CreateCommand() as MySqlCommand;
+           cmd.CommandText = @"UPDATE items SET description = @newDescription WHERE id = @searchId;";
+
+           MySqlParameter searchId = new MySqlParameter();
+           searchId.ParameterName = "@searchId";
+           searchId.Value = id;
+           cmd.Parameters.Add(searchId);
+
+           MySqlParameter newdescription = new MySqlParameter();
+           newdescription.ParameterName = "@newDescription";
+           newdescription.Value = newDescription;
+           cmd.Parameters.Add(newdescription);
+
+           cmd.ExecuteNonQuery();
+           description = newDescription;
+
+           conn.Close();
+           if (conn != null)
+           {
+               conn.Dispose();
+           }
+       }
  }
 }
