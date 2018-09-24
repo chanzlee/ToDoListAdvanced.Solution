@@ -45,10 +45,10 @@ namespace ToDoList.Models
       var cmd = conn.CreateCommand() as MySqlCommand;
       cmd.CommandText = @"INSERT INTO categories (name) VALUES (@name);";
 
-      MySqlParameter name = new MySqlParameter();
-      name.ParameterName = "@name";
-      name.Value = this._name;
-      cmd.Parameters.Add(name);
+      MySqlParameter newName = new MySqlParameter();
+      newName.ParameterName = "@name";
+      newName.Value = this.GetName();
+      cmd.Parameters.Add(newName);
 
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
@@ -240,7 +240,9 @@ namespace ToDoList.Models
           {
             int itemId = rdr.GetInt32(0);
             string itemDescription = rdr.GetString(1);
-            Item newItem = new Item(itemDescription, itemId);
+            DateTime itemDuedate = rdr.GetDateTime(2);
+
+            Item newItem = new Item(itemDescription, itemDuedate, itemId);
             items.Add(newItem);
           }
           conn.Close();

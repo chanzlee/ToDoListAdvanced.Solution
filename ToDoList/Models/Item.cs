@@ -7,12 +7,14 @@ namespace ToDoList.Models
   public class Item
   {
     private string _description;
+    private DateTime _duedate;
     private int _id;
 
-    public Item(string description, int id = 0)
+    public Item(string description, DateTime duedate, int id = 0)
     {
       _description = description;
       _id = id;
+      _duedate = duedate;
     }
 
     public override bool Equals(System.Object otherItem)
@@ -44,18 +46,28 @@ namespace ToDoList.Models
       return _id;
     }
 
+    public DateTime GetDuedate()
+    {
+      return _duedate;
+    }
+
     public void Save()
     {
       MySqlConnection conn = DB.Connection();
       conn.Open();
 
       var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO items (description) VALUES (@description);";
+      cmd.CommandText = @"INSERT INTO items (description, duedate) VALUES (@description, @duedate);";
 
       MySqlParameter description = new MySqlParameter();
       description.ParameterName = "@description";
       description.Value = this._description;
       cmd.Parameters.Add(description);
+
+      MySqlParameter duedate = new MySqlParameter();
+      duedate.ParameterName = "@duedate";
+      duedate.Value = this._duedate;
+      cmd.Parameters.Add(duedate);
 
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
@@ -78,7 +90,9 @@ namespace ToDoList.Models
       {
         int itemId = rdr.GetInt32(0);
         string itemDescription = rdr.GetString(1);
-        Item newItem = new Item(itemDescription, itemId);
+        DateTime itemDuedate = rdr.GetDateTime(2);
+
+        Item newItem = new Item(itemDescription, itemDuedate, itemId);
         allItems.Add(newItem);
       }
       conn.Close();
@@ -103,15 +117,14 @@ namespace ToDoList.Models
 
       var rdr = cmd.ExecuteReader() as MySqlDataReader;
       int itemId = 0;
-      string itemName = "";
+      string itemDescription = "";
 
-      while(rdr.Read())
-      {
-        itemId = rdr.GetInt32(0);
-        itemName = rdr.GetString(1);
-      }
+      rdr.Read();
+      itemId = rdr.GetInt32(0);
+      itemDescription = rdr.GetString(1);
+      DateTime itemDuedate = rdr.GetDateTime(2);
 
-      Item newItem = new Item(itemName, itemId);
+      Item newItem = new Item(itemDescription, itemDuedate, itemId);
       conn.Close();
       if (conn != null)
       {
@@ -149,23 +162,23 @@ namespace ToDoList.Models
     }
 
     public void Delete()
-{
-  MySqlConnection conn = DB.Connection();
-  conn.Open();
-  var cmd = conn.CreateCommand() as MySqlCommand;
-  cmd.CommandText = @"DELETE FROM items WHERE id = @ItemId; DELETE FROM categories_items WHERE item_id = @ItemId;";
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"DELETE FROM items WHERE id = @ItemId; DELETE FROM categories_items WHERE item_id = @ItemId;";
 
-  MySqlParameter itemIdParameter = new MySqlParameter();
-  itemIdParameter.ParameterName = "@ItemId";
-  itemIdParameter.Value = this.GetId();
-  cmd.Parameters.Add(itemIdParameter);
+      MySqlParameter itemIdParameter = new MySqlParameter();
+      itemIdParameter.ParameterName = "@ItemId";
+      itemIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(itemIdParameter);
 
-  cmd.ExecuteNonQuery();
-  if (conn != null)
-  {
-    conn.Close();
-  }
-}
+      cmd.ExecuteNonQuery();
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
 
     public static void DeleteAll()
     {

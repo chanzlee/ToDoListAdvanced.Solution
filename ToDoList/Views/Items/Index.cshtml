@@ -19,9 +19,9 @@
 <button type="submit" class="btn btn-info">Filter</button>
 </form>
 @foreach (var item in Model)
-       {
-           <h4>@item.description | <a href="/items/@item.id/update">Edit</a></h4>
-       }
+  {
+  <h4>@item.GetDescription() | <a href="/items/@item.GetId()/update">Edit</a></h4>
+  }
 <a href = "/items/new">Add New Items</a>
 
 <a href = "/items/sorted">Sort Items</a>

@@ -24,7 +24,7 @@ namespace ToDoList.Controllers
     {
       Category newCategory = new Category(Request.Form["category-name"]);
       newCategory.Save();
-      return RedirectToAction("Success", "Home");
+      return RedirectToAction("Index");
     }
 
     [HttpGet("/categories/{id}")]
