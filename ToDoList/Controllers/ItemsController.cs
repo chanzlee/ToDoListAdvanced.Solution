@@ -31,7 +31,7 @@ namespace ToDoList.Controllers
     [HttpPost("/items")]
     public ActionResult Create()
     {
-        Item newItem = new Item(Request.Form["itemDescription"], DateTime.Parse(Request.Form["itemDuedate"]));
+        Item newItem = new Item(Request.Form["item-description"], DateTime.Parse(Request.Form["item-duedate"]));
         newItem.Save();
         return RedirectToAction("Index");
         // return RedirectToAction("Success", "Home");
@@ -67,7 +67,7 @@ namespace ToDoList.Controllers
     public ActionResult Update(int id)
     {
       Item thisItem = Item.Find(id);
-      thisItem.Edit(Request.Form["newDescription"]);
+      thisItem.Edit(Request.Form["newDescription"], DateTime.Parse(Request.Form["newDuedate"]));
       return RedirectToAction("Index");
     }
     [HttpPost("/items/{itemId}/categories/new")]

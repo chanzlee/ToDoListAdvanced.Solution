@@ -270,12 +270,12 @@ namespace ToDoList.Models
       }
       return categories;
     }
-    public void Edit(string newDescription)
+    public void Edit(string newDescription, DateTime newDuedate)
     {
       MySqlConnection conn = DB.Connection();
       conn.Open();
       var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"UPDATE items SET description = @newDescription WHERE id = @searchId;";
+      cmd.CommandText = @"UPDATE items SET description = @newDescription, duedate = @newDuedate WHERE id = @searchId;";
 
       MySqlParameter searchId = new MySqlParameter();
       searchId.ParameterName = "@searchId";
@@ -287,8 +287,14 @@ namespace ToDoList.Models
       description.Value = newDescription;
       cmd.Parameters.Add(description);
 
+      MySqlParameter duedate = new MySqlParameter();
+      duedate.ParameterName = "@newDuedate";
+      duedate.Value = newDuedate;
+      cmd.Parameters.Add(duedate);
+
       cmd.ExecuteNonQuery();
       _description = newDescription;
+      _duedate = newDuedate;
 
       conn.Close();
       if (conn != null)

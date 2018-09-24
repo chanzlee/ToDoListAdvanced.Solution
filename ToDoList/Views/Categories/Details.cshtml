@@ -15,8 +15,8 @@
 }
 <h4>Add a item to this category:</h4>
 <form action='/categories/@Model["selectedCategory"].GetId()/items/new' method='post'>
-  <label for='itemId'>Select a item</label>
-  <select id='itemId' name='itemId' type='text'>
+  <label for='item-id'>Select a item</label>
+  <select id='item-id' name='item-id' type='text'>
     @foreach (var item in @Model["allItems"])
     {
       <option value='@item.GetId()'>@item.GetDescription()</option>
