@@ -1,0 +1,13 @@
+@{
+  Layout = "_Layout";
+}
+<h2>Category: @Model["category"].GetName()</h2>
+
+@foreach (var item in @Model["allItems"])
+    {
+      <option value='@item.GetId()'>@item.GetDescription()</option>
+    }
+
+<p><a href='/items/new'>Add Items</a></p>
+<p><a href="/categories">Back to Category List</a></p>
+<p><a href='/'>back Home</a></p>

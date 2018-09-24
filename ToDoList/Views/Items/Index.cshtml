@@ -6,7 +6,7 @@
 @foreach(var item in Model)
 {
   <ul>
-    <li><a href = "/items/@item.id">@item.description</a></li>
+    <li><a href='/items/@item.GetId()'>@item.GetDescription()</a></li>
   </ul>
 }
 <form action="/items/sorted" method = "post">
