@@ -7,16 +7,16 @@ namespace ToDoList.Controllers
 {
   public class ItemsController : Controller
   {
-    // [HttpGet("/categories/{categoryId}/items/{itemId}")]
-    // public ActionResult Details(int categoryId, int itemId)
-    // {
-    //   Item item = Item.Find(itemId);
-    //   Dictionary<string, object> model = new Dictionary<string, object>();
-    //   Category category = Category.Find(categoryId);
-    //   model.Add("item", item);
-    //   model.Add("category", category);
-    //   return View(item);
-    // }
+    [HttpGet("/categories/{categoryId}/items/{itemId}")]
+    public ActionResult Details(int categoryId, int itemId)
+    {
+      Item item = Item.Find(itemId);
+      Dictionary<string, object> model = new Dictionary<string, object>();
+      Category category = Category.Find(categoryId);
+      model.Add("item", item);
+      model.Add("category", category);
+      return View(item);
+    }
     [HttpGet("/items")]
     public ActionResult Index()
     {
@@ -52,11 +52,10 @@ namespace ToDoList.Controllers
         Item selectedItem = Item.Find(id);
         List<Category> itemCategories = selectedItem.GetCategories();
         List<Category> allCategories = Category.GetAll();
-        model.Add("item", selectedItem);
+        model.Add("selectedItem", selectedItem);
         model.Add("itemCategories", itemCategories);
         model.Add("allCategories", allCategories);
         return View( model);
-
     }
     [HttpGet("/items/{id}/update")]
     public ActionResult UpdateForm(int id)
