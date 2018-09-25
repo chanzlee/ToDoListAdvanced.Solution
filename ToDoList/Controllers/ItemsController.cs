@@ -38,6 +38,14 @@ namespace ToDoList.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost("/items/done")]
+        public ActionResult UpdateIndexDone(int doneId, bool isDone)
+        {
+          Item thisItem = Item.Find(doneId);
+          thisItem.CrossOut(isDone);
+          return RedirectToAction("Index");
+        }
+
         [HttpGet("/items/{id}/delete")]
         public ActionResult DeleteOne(int id)
         {
@@ -72,13 +80,22 @@ namespace ToDoList.Controllers
           thisItem.Edit(Request.Form["new-description"], DateTime.Parse(Request.Form["new-duedate"]));
           return RedirectToAction("Details", new {id = thisItem.GetId()});
         }
+
+        [HttpPost("/items/{id}/done")]
+        public ActionResult UpdateDetailDone(int id, bool isDone)
+        {
+          Item thisItem = Item.Find(id);
+          thisItem.CrossOut(isDone);
+          return RedirectToAction("Details", new {id = thisItem.GetId()});
+        }
+
         [HttpPost("/items/{itemId}/categories/new")]
         public ActionResult AddCategory(int itemId)
         {
             Item item = Item.Find(itemId);
             Category category = Category.Find(Int32.Parse(Request.Form["category-id"]));
             item.AddCategory(category);
-            return RedirectToAction("Success", "Home");
+            return RedirectToAction("Index");
         }
     }
 }

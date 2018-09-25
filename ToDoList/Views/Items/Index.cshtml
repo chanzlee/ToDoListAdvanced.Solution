@@ -11,7 +11,25 @@
   <ul>
     @foreach (var item in @Model)
     {
-      <li><a href='/items/@item.GetId()'>@item.GetDescription()</a>         <a href="/items/@item.GetId()/update">Edit</a> | <a method="post" href="/items/@item.GetId()/delete">Delete</a></li>
+      <li><a href='/items/@item.GetId()'>@item.GetDescription()</a>  <a href="/items/@item.GetId()/update">Edit</a> | <a method="post" href="/items/@item.GetId()/delete">Delete</a> </li>
+      <p>Status: @item.GetDone()</p>
+      @if(@item.GetDone() == false)
+      {
+      <form action="/items/done" method="post">
+        <input name="doneId" type="hidden" value="@item.GetId()">
+        <input name="isDone" type="hidden" value="true">
+        <button type="submit">Done</button>
+      </form>
+      }
+      else
+      {
+      <form action="/items/done" method="post">
+        <input name="doneId" type="hidden" value="@item.GetId()">
+        <input name="isDone" type="hidden" value="false">
+        <button type="submit">Undo</button>
+      </form>
+      }
+
     }
   </ul>
 }

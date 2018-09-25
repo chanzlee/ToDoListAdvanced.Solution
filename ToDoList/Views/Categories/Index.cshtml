@@ -11,7 +11,7 @@
   <ul>
     @foreach (var category in @Model)
     {
-      <li><a href="/categories/@category.GetId()">@category.GetName()</a>  <a href="/categories/@category.GetId()/update">Edit</a> | <a href="/categories/@category.GetId()/delete">Delete</a></li>
+      <li><a href="/categories/@category.GetId()">@category.GetName()</a>  <a href="/categories/@category.GetId()/update">Edit</a> | <a href="/categories/@category.GetId()/delete">Delete</a> </li>
     }
   </ul>
 }

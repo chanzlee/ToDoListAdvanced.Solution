@@ -9,12 +9,14 @@ namespace ToDoList.Models
     private string _description;
     private DateTime _duedate;
     private int _id;
+    private bool _done;
 
-    public Item(string description, DateTime duedate, int id = 0)
+    public Item(string description, DateTime duedate, bool done = false, int id = 0)
     {
       _description = description;
       _id = id;
       _duedate = duedate;
+      _done = done;
     }
 
     public override bool Equals(System.Object otherItem)
@@ -39,6 +41,11 @@ namespace ToDoList.Models
     public string GetDescription()
     {
       return _description;
+    }
+
+    public bool GetDone()
+    {
+      return _done;
     }
 
     public int GetId()
@@ -91,8 +98,9 @@ namespace ToDoList.Models
         int itemId = rdr.GetInt32(0);
         string itemDescription = rdr.GetString(1);
         DateTime itemDuedate = rdr.GetDateTime(2);
+        bool isDone = rdr.GetBoolean(3);
 
-        Item newItem = new Item(itemDescription, itemDuedate, itemId);
+        Item newItem = new Item(itemDescription, itemDuedate, isDone, itemId);
         allItems.Add(newItem);
       }
       conn.Close();
@@ -123,8 +131,9 @@ namespace ToDoList.Models
       itemId = rdr.GetInt32(0);
       itemDescription = rdr.GetString(1);
       DateTime itemDuedate = rdr.GetDateTime(2);
+      bool isDone = rdr.GetBoolean(3);
 
-      Item newItem = new Item(itemDescription, itemDuedate, itemId);
+      Item newItem = new Item(itemDescription, itemDuedate, isDone, itemId);
       conn.Close();
       if (conn != null)
       {
@@ -300,6 +309,32 @@ namespace ToDoList.Models
       if (conn != null)
       {
         conn.Dispose();
+      }
+    }
+      public void CrossOut(bool isDone)
+      {
+        MySqlConnection conn = DB.Connection();
+        conn.Open();
+        var cmd = conn.CreateCommand() as MySqlCommand;
+        cmd.CommandText = @"UPDATE items SET done = @done WHERE id = @searchId;";
+
+        MySqlParameter searchId = new MySqlParameter();
+        searchId.ParameterName = "@searchId";
+        searchId.Value = this.GetId();
+        cmd.Parameters.Add(searchId);
+
+        MySqlParameter isItemDone = new MySqlParameter();
+        isItemDone.ParameterName = "@done";
+        isItemDone.Value = isDone;
+        cmd.Parameters.Add(isItemDone);
+
+        cmd.ExecuteNonQuery();
+        _done = true;
+
+        conn.Close();
+        if (conn != null)
+        {
+          conn.Dispose();
       }
     }
   }

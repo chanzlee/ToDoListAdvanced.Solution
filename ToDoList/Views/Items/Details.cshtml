@@ -3,6 +3,23 @@
 <h1>To Do List</h1>
 <h2>Item: @Model["selectedItem"].GetDescription()</h2>
 <h2>Due Date: @Model["selectedItem"].GetDuedate()</h2>
+<h2>Status: @Model["selectedItem"].GetDone()</h2>
+@if(@Model["selectedItem"].GetDone() == false)
+{
+<form action="/items/@Model["selectedItem"].GetId()/done" method="post">
+  <input name="doneId" type="hidden" value="@Model["selectedItem"].GetId()">
+  <input name="isDone" type="hidden" value="true">
+  <button type="submit">Done</button>
+</form>
+}
+else
+{
+<form action="/items/@Model["selectedItem"].GetId()/done" method="post">
+  <input name="doneId" type="hidden" value="@Model["selectedItem"].GetId()">
+  <input name="isDone" type="hidden" value="false">
+  <button type="submit">Undo</button>
+</form>
+}
 <hr />
 @if (@Model["itemCategories"].Count != 0)
 {
