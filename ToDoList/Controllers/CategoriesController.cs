@@ -7,18 +7,19 @@ namespace ToDoList.Controllers
 {
   public class CategoriesController : Controller
   {
-
     [HttpGet("/categories")]
     public ActionResult Index()
     {
       List<Category> allCategories = Category.GetAll();
       return View(allCategories);
     }
+
     [HttpGet("/categories/new")]
     public ActionResult CreateForm()
     {
       return View();
     }
+
     [HttpPost("/categories")]
     public ActionResult Create()
     {
@@ -39,10 +40,11 @@ namespace ToDoList.Controllers
       model.Add("allItems", allItems);
       return View(model);
     }
+
     [HttpGet("/categories/{id}/items/new")]
     public ActionResult CreateItemForm()
     {
-      return View("~/Views/Items/CreateItemForm.cshtml");
+      return View("~/Views/Items/CreateForm.cshtml");
     }
 
     [HttpPost("/categories/{categoryId}/items/new")]
@@ -52,27 +54,29 @@ namespace ToDoList.Controllers
       Item item = Item.Find(Int32.Parse(Request.Form["item-id"]));
       category.AddItem(item);
       return RedirectToAction("Success", "Home");
-
     }
+
     [HttpGet("/categories/{categoryId}/update")]
     public ActionResult UpdateForm(int categoryId)
     {
-      Category thisCategory = Category.Find(categoryId);
-      return View("update", thisCategory);
+       Category thisCategory = Category.Find(categoryId);
+       return View("update", thisCategory);
     }
+
     [HttpPost("/categories/{categoryId}/update")]
     public ActionResult Update(int categoryId)
     {
       Category thisCategory = Category.Find(categoryId);
-      thisCategory.Edit(Request.Form["newname"]);
+      thisCategory.Edit(Request.Form["new-category-name"]);
       return RedirectToAction("Index");
     }
+
     [HttpGet("/categories/{categoryid}/delete")]
     public ActionResult DeleteOne(int categoryId)
     {
       Category thisCategory = Category.Find(categoryId);
       thisCategory.Delete();
-      return RedirectToAction("index");
+      return RedirectToAction("Index");
     }
   }
 }
